@@ -1,0 +1,46 @@
+/* Shared styles for Design System preview cards.
+   Each card targets ~700px wide; height varies. Plain, low-chrome specimens. */
+
+@import url("../colors_and_type.css");
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--ld-bg);
+  color: var(--ld-text);
+  font-family: var(--ld-font-sans);
+}
+
+.card {
+  padding: 24px 28px;
+  width: 700px;
+  box-sizing: border-box;
+}
+
+.row { display: flex; gap: 12px; align-items: center; }
+.col { display: flex; flex-direction: column; }
+
+.label {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ld-text-subtlest);
+  font-family: var(--ld-font-mono);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.value {
+  font-size: 12px;
+  line-height: 16px;
+  color: var(--ld-text);
+  font-family: var(--ld-font-mono);
+}
+
+.swatch {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  border: 1px solid var(--ld-gray-20);
+  flex: 0 0 auto;
+}
+
+.hairline { height: 1px; background: var(--ld-gray-20); }

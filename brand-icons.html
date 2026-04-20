@@ -1,0 +1,14 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Icon library</title>
+<link rel="stylesheet" href="_card.css"></head>
+<body><div class="card">
+<div id="g" style="display:grid;grid-template-columns:repeat(14,1fr);gap:12px"></div>
+<div class="label" style="margin-top:14px">Everyday line icons · 24×24 · currentColor · stroke-based with filled active-state variants</div>
+<script>
+const icons = ['Home','Search','User','UserCircle','Heart','HeartFill','Bell','Bookmark','Box','Truck','Tag','TagFill','Receipt','Wallet','Returns','Clock','Calendar','Star','StarFill','StarHalf','Menu','Close','Plus','Minus','Check','ChevronRight','ChevronLeft','ChevronDown','ChevronUp','Share','Filter','Sliders','Gear','InfoCircle','InfoCircleFill','ExclamationCircle','ExclamationCircleFill','CheckCircle','CheckCircleFill','Warning','WarningFill','Magic','MagicFill','Map','MapFill','Location','Mobile','Email','Phone','Camera','Trash','Pencil','Flash','Flag','Dollar','Gift','Copy','Link','Eye','EyeSlash','Microphone','Voice','Users','Wrench','Barcode','QrCode','Grid','List'];
+document.getElementById('g').innerHTML = icons.slice(0,56).map(n => `
+  <div style="display:flex;flex-direction:column;align-items:center;gap:2px">
+    <img src="../assets/icons/${n}.svg" style="width:22px;height:22px" title="${n}">
+    <div style="font:400 8.5px/1 var(--ld-font-mono);color:var(--ld-text-subtlest);text-align:center;overflow:hidden;text-overflow:ellipsis;max-width:48px;white-space:nowrap">${n}</div>
+  </div>`).join('');
+</script>
+</div></body></html>

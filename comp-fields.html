@@ -1,0 +1,19 @@
+<!doctype html><html><head><meta charset="utf-8"><title>Form fields</title>
+<link rel="stylesheet" href="_card.css">
+<style>
+.f{font-family:var(--ld-font-sans);}
+.lbl{font-size:14px;color:var(--ld-text);margin-bottom:6px;display:block;font-weight:400}
+.inp{width:100%;padding:12px 14px;border:1px solid var(--ld-gray-100);border-radius:8px;font:400 16px/1.3 var(--ld-font-sans);background:var(--ld-white);color:var(--ld-text);outline:none;transition:border-color 150ms var(--ld-ease-out);}
+.inp:focus{border:2px solid var(--ld-blue-100);padding:11px 13px;}
+.inp.err{border-color:var(--ld-red-100);border-width:2px;padding:11px 13px;}
+.hint{font-size:12px;line-height:16px;margin-top:6px;color:var(--ld-text-subtle)}
+.hint.err{color:var(--ld-text-negative-bold)}
+</style></head>
+<body><div class="card">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+<div class="f"><label class="lbl">Email address</label><input class="inp" value="shopper@walmart.com"><div class="hint">We'll send your receipt here.</div></div>
+<div class="f"><label class="lbl">ZIP code</label><input class="inp err" value="000"><div class="hint err">Enter a valid ZIP code.</div></div>
+<div class="f"><label class="lbl">Search</label><input class="inp" placeholder="Search everything at Walmart"></div>
+<div class="f"><label class="lbl">Card number</label><input class="inp" value="•••• •••• •••• 4242" disabled style="background:var(--ld-gray-5);color:var(--ld-gray-100)"></div>
+</div>
+</div></body></html>
