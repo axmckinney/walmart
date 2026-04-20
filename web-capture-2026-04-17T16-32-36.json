@@ -1,0 +1,36 @@
+[
+  {
+    "id": "cap_mo34m7sw_hu0q8p",
+    "selector": "img.mh1",
+    "label": "img.mh1",
+    "tag": "img",
+    "url": "https://www.walmart.com/",
+    "title": "Walmart | Save Money. Live better.",
+    "timestamp": "2026-04-17T16:32:19.713Z",
+    "innerText": "",
+    "outerHTML": "<img loading=\"lazy\" class=\"mh1 f5\" src=\"//i5.walmartimages.com/dfw/63fd9f59-30b3/629cc93a-dae2-4b74-afd7-faecce345c85/v1/wplus-indigo-rebrand-bug-inverse.svg\" alt=\"Walmart+\" height=\"30\" width=\"36\" style=\"vertical-align:-0.175em\">",
+    "rect": {
+      "x": 32,
+      "y": 27,
+      "width": 36,
+      "height": 30
+    },
+    "computedStyles": {
+      "display": "block",
+      "width": "36px",
+      "height": "30px",
+      "margin": "0px 4px",
+      "border": "0px none rgb(255, 0, 0)",
+      "box-sizing": "border-box",
+      "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+      "color": "rgb(255, 0, 0)",
+      "font-family": "EverydaySans, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+      "font-size": "16px",
+      "text-decoration": "none",
+      "overflow": "clip",
+      "transition": "all",
+      "cursor": "pointer"
+    },
+    "cssRules": []
+  }
+]
