@@ -1,0 +1,35 @@
+[
+  {
+    "id": "cap_mo355xrm_t6fb3d",
+    "selector": "img.db",
+    "label": "img.db",
+    "tag": "img",
+    "url": "https://www.walmart.com/",
+    "title": "Walmart | Save Money. Live better.",
+    "timestamp": "2026-04-17T16:47:39.826Z",
+    "innerText": "",
+    "outerHTML": "<img loading=\"lazy\" alt=\"Walmart\" class=\"db\" src=\"//i5.walmartimages.com/dfw/63fd9f59-14e2/9d304ce6-96de-4331-b8ec-c5191226d378/v1/spark-icon.svg\" data-automation-id=\"header-walmartLogo\" width=\"36\" height=\"auto\">",
+    "rect": {
+      "x": 32,
+      "y": 24,
+      "width": 36,
+      "height": 36
+    },
+    "computedStyles": {
+      "display": "block",
+      "width": "36px",
+      "height": "36px",
+      "border": "0px none rgb(254, 0, 1)",
+      "box-sizing": "border-box",
+      "background": "rgba(0, 0, 0, 0) none repeat scroll 0% 0% / auto padding-box border-box",
+      "color": "rgb(254, 0, 1)",
+      "font-family": "EverydaySans, \"Helvetica Neue\", Helvetica, Arial, sans-serif",
+      "font-size": "16px",
+      "text-decoration": "none",
+      "overflow": "clip",
+      "transition": "all",
+      "cursor": "pointer"
+    },
+    "cssRules": []
+  }
+]
