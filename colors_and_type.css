@@ -1,0 +1,407 @@
+/*
+ * Living Design System — Colors & Type
+ * Walmart's global design system for omni experiences.
+ *
+ * Sourced from @livingdesign/tokens (primitive + semantic) and
+ * @walmart/everyday-sans web fonts. Light/regular scale only.
+ */
+
+/* -------------------- Fonts -------------------- */
+
+@font-face {
+  font-family: "Everyday Sans";
+  src: url("fonts/EverydaySans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Everyday Sans";
+  src: url("fonts/EverydaySans-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Everyday Sans Mono";
+  src: url("fonts/EverydaySansMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Everyday Sans Mono";
+  src: url("fonts/EverydaySansMono-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* -------------------- Primitive color scales -------------------- */
+  /* Blue — brand */
+  --ld-blue-5:  #f0f5ff; --ld-blue-10: #e9f1fe; --ld-blue-20: #c9dcfd;
+  --ld-blue-30: #acc8fb; --ld-blue-40: #90b5f9; --ld-blue-50: #7aa5f6;
+  --ld-blue-60: #5e93f3; --ld-blue-70: #4380ef; --ld-blue-80: #2e70eb;
+  --ld-blue-90: #175ee2; --ld-blue-100:#0053e2; --ld-blue-110:#114ab6;
+  --ld-blue-120:#003fb2; --ld-blue-130:#002e99; --ld-blue-140:#002185;
+  --ld-blue-150:#001270; --ld-blue-160:#001e60; --ld-blue-170:#080042;
+  --ld-blue-180:#0e002e;
+
+  /* Spark — Walmart Spark yellow */
+  --ld-spark-5:  #fffcf4; --ld-spark-10: #fef6de; --ld-spark-20: #fff3d2;
+  --ld-spark-30: #ffedbc; --ld-spark-40: #ffe7a6; --ld-spark-50: #fbe298;
+  --ld-spark-60: #ffda79; --ld-spark-70: #ffd463; --ld-spark-80: #ffce4d;
+  --ld-spark-90: #ffc836; --ld-spark-100:#ffc220; --ld-spark-110:#e6a31d;
+  --ld-spark-120:#cc851a; --ld-spark-130:#b36a16; --ld-spark-140:#995213;
+  --ld-spark-150:#803d10; --ld-spark-160:#662b0d; --ld-spark-170:#4d1c0a;
+  --ld-spark-180:#330f06;
+
+  /* Gray */
+  --ld-gray-5:  #f8f8f8; --ld-gray-10: #f1f1f2; --ld-gray-20: #e3e4e5;
+  --ld-gray-30: #d5d6d8; --ld-gray-40: #c7c8cb; --ld-gray-50: #babbbe;
+  --ld-gray-60: #acadb0; --ld-gray-70: #9e9fa3; --ld-gray-80: #909196;
+  --ld-gray-90: #828489; --ld-gray-100:#74767c; --ld-gray-110:#686a70;
+  --ld-gray-120:#5d5e63; --ld-gray-130:#515357; --ld-gray-140:#46474a;
+  --ld-gray-150:#3a3b3e; --ld-gray-160:#2e2f32; --ld-gray-170:#232325;
+  --ld-gray-180:#171819;
+
+  /* Green */
+  --ld-green-5:#f4f9f2; --ld-green-10:#eaf3e6; --ld-green-20:#d4e7cd;
+  --ld-green-50:#95c381; --ld-green-100:#2a8703; --ld-green-130:#1d5f02;
+  --ld-green-140:#195102; --ld-green-160:#113601;
+
+  /* Red */
+  --ld-red-5:#fef2f1; --ld-red-10:#fde9e8; --ld-red-20:#fbd0cc;
+  --ld-red-50:#f69991; --ld-red-100:#ea1100; --ld-red-130:#a20c00;
+  --ld-red-140:#8d0a00; --ld-red-160:#630700;
+
+  /* Orange / Pink / Purple / Teal / Cyan / Yellow */
+  --ld-orange-100:#fa6400; --ld-orange-10:#fff0e6; --ld-orange-50:#fdb280;
+  --ld-pink-100:#cb2c90; --ld-pink-10:#fce9f5; --ld-pink-50:#ea9ac3;
+  --ld-purple-10:#efebf2; --ld-purple-50:#b199bf; --ld-purple-100:#63327e;
+  --ld-purple-130:#452358; --ld-purple-140:#3b1e4c;
+  --ld-teal-100:#00809e; --ld-teal-10:#e1f3f8; --ld-teal-50:#5dc3da;
+  --ld-cyan-100:#0076b3; --ld-cyan-10:#e7f6fe;
+  --ld-yellow-100:#fff200;
+
+  /* Magic (AI gradient) */
+  --ld-magic-1:#0053e2; --ld-magic-2:#3d90ec; --ld-magic-3:#79cdf6; --ld-magic-4:#e9f1fe;
+
+  --ld-white:#ffffff; --ld-black:#000000;
+
+  /* Transparent overlays */
+  --ld-transparent-dark-10:#0000001a; --ld-transparent-dark-30:#0000004d;
+  --ld-transparent-dark-50:#00000080; --ld-transparent-dark-70:#000000b3;
+  --ld-transparent-light-10:#ffffff1a; --ld-transparent-light-50:#ffffff80;
+
+  /* -------------------- Semantic colors (light, regular) -------------------- */
+  /* Background — canvas */
+  --ld-bg: var(--ld-white);
+  --ld-bg-subtle: var(--ld-gray-5);
+  --ld-bg-inverse: var(--ld-gray-160);
+
+  /* Fill — component surfaces */
+  --ld-fill: var(--ld-white);
+  --ld-fill-subtle: var(--ld-gray-5);
+  --ld-fill-hovered: var(--ld-gray-10);
+  --ld-fill-pressed: var(--ld-gray-20);
+  --ld-fill-disabled: var(--ld-white);
+  --ld-fill-inverse: var(--ld-gray-160);
+  --ld-fill-transparent: #00000000;
+
+  /* Brand fill */
+  --ld-fill-brand: var(--ld-blue-100);
+  --ld-fill-brand-bold: var(--ld-blue-160);
+  --ld-fill-brand-subtle: var(--ld-blue-10);
+
+  /* Semantic status fills */
+  --ld-fill-info: var(--ld-blue-100);
+  --ld-fill-info-subtle: var(--ld-blue-10);
+  --ld-fill-positive: var(--ld-green-100);
+  --ld-fill-positive-subtle: var(--ld-green-10);
+  --ld-fill-negative: var(--ld-red-100);
+  --ld-fill-negative-subtle: var(--ld-red-10);
+  --ld-fill-warning: var(--ld-spark-100);
+  --ld-fill-warning-subtle: var(--ld-spark-10);
+  --ld-fill-edited: var(--ld-purple-100);
+  --ld-fill-edited-subtle: var(--ld-purple-10);
+
+  /* Activated (selected, toggled-on) */
+  --ld-fill-activated: var(--ld-blue-100);
+  --ld-fill-activated-hovered: var(--ld-blue-110);
+  --ld-fill-activated-pressed: var(--ld-blue-130);
+  --ld-fill-activated-subtle: var(--ld-blue-5);
+
+  /* Text */
+  --ld-text: var(--ld-gray-160);
+  --ld-text-subtle: var(--ld-gray-130);
+  --ld-text-subtlest: var(--ld-gray-100);
+  --ld-text-disabled: var(--ld-gray-50);
+  --ld-text-inverse: var(--ld-white);
+  --ld-text-activated: var(--ld-blue-110);
+  --ld-text-brand: var(--ld-blue-100);
+  --ld-text-brand-bold: var(--ld-blue-160);
+  --ld-text-info: var(--ld-blue-100);
+  --ld-text-info-bold: var(--ld-blue-130);
+  --ld-text-positive: var(--ld-green-100);
+  --ld-text-positive-bold: var(--ld-green-130);
+  --ld-text-negative: var(--ld-red-100);
+  --ld-text-negative-bold: var(--ld-red-130);
+  --ld-text-warning: var(--ld-spark-140);
+  --ld-text-warning-bold: var(--ld-spark-160);
+  --ld-text-edited: var(--ld-purple-100);
+  --ld-text-edited-bold: var(--ld-purple-130);
+
+  /* Borders */
+  --ld-border: var(--ld-gray-160);
+  --ld-border-subtle: var(--ld-gray-130);
+  --ld-border-subtlest: var(--ld-gray-100);
+  --ld-border-disabled: var(--ld-gray-50);
+  --ld-border-inverse: var(--ld-white);
+  --ld-border-activated: var(--ld-blue-100);
+  --ld-border-brand: var(--ld-blue-100);
+  --ld-border-brand-bold: var(--ld-blue-160);
+  --ld-border-info: var(--ld-blue-100);
+  --ld-border-positive: var(--ld-green-100);
+  --ld-border-negative: var(--ld-red-100);
+  --ld-border-warning: var(--ld-spark-140);
+
+  /* -------------------- Primitive scale: space -------------------- */
+  --ld-space-25: 2px;  --ld-space-50: 4px;  --ld-space-100: 8px;
+  --ld-space-150: 12px; --ld-space-200: 16px; --ld-space-250: 20px;
+  --ld-space-300: 24px; --ld-space-400: 32px; --ld-space-500: 40px;
+  --ld-space-600: 48px; --ld-space-700: 56px; --ld-space-800: 64px;
+  --ld-space-900: 72px; --ld-space-1000: 80px;
+
+  /* -------------------- Border radius -------------------- */
+  --ld-radius-25: 2px;  --ld-radius-50: 4px;  --ld-radius-100: 8px;
+  --ld-radius-200: 16px; --ld-radius-300: 24px; --ld-radius-400: 32px;
+  --ld-radius-round: 1000px;
+
+  --ld-border-width-100: 1px;
+  --ld-border-width-200: 2px;
+
+  /* -------------------- Breakpoints -------------------- */
+  --ld-bp-small: 0px; --ld-bp-medium: 600px; --ld-bp-large: 900px;
+  --ld-bp-xlarge: 1200px; --ld-bp-xxlarge: 1920px;
+
+  /* -------------------- Elevation -------------------- */
+  --ld-elevation-100:
+    0 1px 2px 1px #00000026,
+    0 -1px 2px 0  #0000001a;
+  --ld-elevation-200:
+    0 3px 5px 2px #00000026,
+    0 -1px 3px 0  #0000001a;
+  --ld-elevation-300:
+    0 5px 10px 3px #00000026,
+    0 -1px 4px 0   #0000001a;
+
+  /* -------------------- Motion -------------------- */
+  --ld-duration-100: 100ms;
+  --ld-duration-200: 200ms;
+  --ld-duration-300: 300ms;
+  --ld-duration-400: 400ms;
+  --ld-duration-500: 500ms;
+  --ld-duration-600: 600ms;
+  --ld-duration-700: 700ms;
+
+  --ld-ease-in:     cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  --ld-ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ld-ease-out:    cubic-bezier(0.165, 0.84, 0.44, 1);
+  --ld-linear:      linear;
+
+  /* -------------------- Magic (AI) gradient -------------------- */
+  --ld-gradient-magic: linear-gradient(90deg, var(--ld-magic-1) 0%, var(--ld-magic-2) 50%, var(--ld-magic-3) 100%);
+
+  /* -------------------- Type primitives -------------------- */
+  --ld-font-sans: "Everyday Sans", "Helvetica Neue", Arial, sans-serif;
+  --ld-font-mono: "Everyday Sans Mono", "Courier New", monospace;
+
+  --ld-font-weight-regular: 400;
+  --ld-font-weight-bold: 700;
+
+  /* Size scale */
+  --ld-font-size-25: 12px; --ld-font-size-50: 14px; --ld-font-size-100: 16px;
+  --ld-font-size-150: 18px; --ld-font-size-200: 20px; --ld-font-size-300: 24px;
+  --ld-font-size-400: 28px; --ld-font-size-500: 32px; --ld-font-size-600: 36px;
+  --ld-font-size-700: 42px;
+
+  /* Line heights */
+  --ld-line-200: 16px; --ld-line-250: 20px; --ld-line-300: 24px;
+  --ld-line-350: 28px; --ld-line-400: 32px; --ld-line-450: 36px;
+  --ld-line-500: 40px; --ld-line-550: 44px; --ld-line-600: 48px;
+  --ld-line-650: 52px;
+
+  /* -------------------- Semantic type tokens -------------------- */
+  /* Display — marketing / hero */
+  --ld-display-lg-size: var(--ld-font-size-500);       /* bS */
+  --ld-display-lg-lh:   var(--ld-line-500);
+  --ld-display-lg-size-bL: var(--ld-font-size-700);
+  --ld-display-lg-lh-bL:   var(--ld-line-650);
+
+  --ld-display-sm-size: var(--ld-font-size-400);
+  --ld-display-sm-lh:   var(--ld-line-450);
+  --ld-display-sm-size-bL: var(--ld-font-size-600);
+  --ld-display-sm-lh-bL:   var(--ld-line-600);
+
+  /* Heading */
+  --ld-heading-lg-size: var(--ld-font-size-300);
+  --ld-heading-lg-lh:   var(--ld-line-400);
+  --ld-heading-lg-size-bL: var(--ld-font-size-500);
+  --ld-heading-lg-lh-bL:   var(--ld-line-500);
+
+  --ld-heading-md-size: var(--ld-font-size-200);
+  --ld-heading-md-lh:   var(--ld-line-350);
+  --ld-heading-md-size-bL: var(--ld-font-size-300);
+  --ld-heading-md-lh-bL:   var(--ld-line-450);
+
+  --ld-heading-sm-size: var(--ld-font-size-150);
+  --ld-heading-sm-lh:   var(--ld-line-300);
+  --ld-heading-sm-size-bL: var(--ld-font-size-200);
+  --ld-heading-sm-lh-bL:   var(--ld-line-350);
+
+  /* Body */
+  --ld-body-lg-size: var(--ld-font-size-150);
+  --ld-body-lg-lh:   var(--ld-line-300);
+  --ld-body-md-size: var(--ld-font-size-100);
+  --ld-body-md-lh:   var(--ld-line-300);
+  --ld-body-sm-size: var(--ld-font-size-50);
+  --ld-body-sm-lh:   var(--ld-line-250);
+
+  /* Caption */
+  --ld-caption-size: var(--ld-font-size-25);
+  --ld-caption-lh:   var(--ld-line-200);
+}
+
+/* -------------------- Global base -------------------- */
+
+html {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+*, *::before, *::after { box-sizing: inherit; }
+
+body {
+  font-family: var(--ld-font-sans);
+  font-size: var(--ld-body-md-size);
+  line-height: var(--ld-body-md-lh);
+  font-weight: var(--ld-font-weight-regular);
+  color: var(--ld-text);
+  background: var(--ld-bg);
+  margin: 0;
+}
+
+/* -------------------- Semantic typographic elements -------------------- */
+
+.ld-display-lg, h1.ld-display, .ld-hero {
+  font-family: var(--ld-font-sans);
+  font-weight: var(--ld-font-weight-bold);
+  font-size: var(--ld-display-lg-size);
+  line-height: var(--ld-display-lg-lh);
+  color: var(--ld-text);
+  letter-spacing: -0.01em;
+}
+@media (min-width: 900px) {
+  .ld-display-lg, h1.ld-display, .ld-hero {
+    font-size: var(--ld-display-lg-size-bL);
+    line-height: var(--ld-display-lg-lh-bL);
+  }
+}
+
+.ld-display-sm {
+  font-family: var(--ld-font-sans);
+  font-weight: var(--ld-font-weight-bold);
+  font-size: var(--ld-display-sm-size);
+  line-height: var(--ld-display-sm-lh);
+}
+@media (min-width: 900px) {
+  .ld-display-sm {
+    font-size: var(--ld-display-sm-size-bL);
+    line-height: var(--ld-display-sm-lh-bL);
+  }
+}
+
+.ld-h1, h1 {
+  font-family: var(--ld-font-sans);
+  font-weight: var(--ld-font-weight-bold);
+  font-size: var(--ld-heading-lg-size);
+  line-height: var(--ld-heading-lg-lh);
+  color: var(--ld-text);
+  margin: 0;
+}
+@media (min-width: 900px) {
+  .ld-h1, h1 {
+    font-size: var(--ld-heading-lg-size-bL);
+    line-height: var(--ld-heading-lg-lh-bL);
+  }
+}
+
+.ld-h2, h2 {
+  font-family: var(--ld-font-sans);
+  font-weight: var(--ld-font-weight-bold);
+  font-size: var(--ld-heading-md-size);
+  line-height: var(--ld-heading-md-lh);
+  color: var(--ld-text);
+  margin: 0;
+}
+@media (min-width: 900px) {
+  .ld-h2, h2 {
+    font-size: var(--ld-heading-md-size-bL);
+    line-height: var(--ld-heading-md-lh-bL);
+  }
+}
+
+.ld-h3, h3 {
+  font-family: var(--ld-font-sans);
+  font-weight: var(--ld-font-weight-bold);
+  font-size: var(--ld-heading-sm-size);
+  line-height: var(--ld-heading-sm-lh);
+  color: var(--ld-text);
+  margin: 0;
+}
+@media (min-width: 900px) {
+  .ld-h3, h3 {
+    font-size: var(--ld-heading-sm-size-bL);
+    line-height: var(--ld-heading-sm-lh-bL);
+  }
+}
+
+.ld-body-lg { font-size: var(--ld-body-lg-size); line-height: var(--ld-body-lg-lh); }
+.ld-body    { font-size: var(--ld-body-md-size); line-height: var(--ld-body-md-lh); }
+.ld-body-sm { font-size: var(--ld-body-sm-size); line-height: var(--ld-body-sm-lh); }
+.ld-caption, small {
+  font-size: var(--ld-caption-size);
+  line-height: var(--ld-caption-lh);
+  color: var(--ld-text-subtle);
+}
+
+p { margin: 0 0 var(--ld-space-200); }
+
+code, kbd, pre, .ld-mono {
+  font-family: var(--ld-font-mono);
+  font-size: var(--ld-body-sm-size);
+}
+
+a {
+  color: var(--ld-text-brand);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+a:hover  { color: var(--ld-blue-110); }
+a:active { color: var(--ld-blue-130); }
+
+strong, b { font-weight: var(--ld-font-weight-bold); }
+
+::selection { background: var(--ld-blue-20); color: var(--ld-text); }
+
+/* AI-magic gradient text */
+.ld-magic-text {
+  background: var(--ld-gradient-magic);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+  font-weight: var(--ld-font-weight-bold);
+}
