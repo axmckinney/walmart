@@ -1,6 +1,6 @@
 # Slide to pay · Liquid Glass
 
-An interactive prototype of the Sam's Club checkout "Slide to pay" control, rebuilt as layered glass in the style of iOS Liquid Glass. Open `index.html` in a browser; no build step or server is needed. Fonts (Everyday Sans) and the four product thumbnails are inlined.
+An interactive prototype of the Sam's Club checkout "Slide to pay" control, rebuilt as layered glass in the style of iOS Liquid Glass. Open `index.html` in a browser; no build step or server is needed. Fonts (Sam's Sans UI), the Sam's Club wordmark and logomark, and the four product thumbnails are inlined. The source assets live in `../../assets/sams-club/`.
 
 ## What changed from production
 
@@ -12,7 +12,7 @@ An interactive prototype of the Sam's Club checkout "Slide to pay" control, rebu
 | Sheen sweep every 2.6 s | Same cadence, rendered as a soft caustic in screen blend. Pauses while the knob is held |
 | No press feedback | Capsule scales to 1.015 and the knob brightens on press |
 | Knob follows finger 1:1 | Knob trails slightly and stretches with velocity, a lighter liquid fill follows behind; early release springs back |
-| Flat completion | Knob swells leftward into the capsule and dissolves, tint turns positive green, label reads "Order placed" |
+| Flat completion | Knob swells leftward into the capsule and dissolves, tint turns Maverick Green `#00AC44`, label reads "Order placed" |
 
 ## Interaction
 
@@ -30,7 +30,13 @@ Everything lives in `index.html`:
 - `.lg-knob` is the lens. The `lens-on` class, added only in Chromium, switches its `backdrop-filter` to the `#lg-lens` SVG filter whose displacement map is generated on a canvas at load.
 - The `<script>` block at the bottom owns the pointer, spring and completion logic.
 
+## Brand
+
+- Type is Sam's Sans UI: Semibold (600) for the label, total and headings, Medium (500) for chips and choice buttons, Regular (400) for body. Sam's Sans Mono UI sets the token values in the spec column. Semibold is the heaviest UI weight, so nothing on the page asks for 700.
+- Club Blue `#0A6CFF` is the capsule tint and the header. Maverick Green `#00AC44` to Dark Green `#016F2C` is the completion tint. The page ground uses Warm White `#F4F2E8` with Warm Grey derived lines; the dark theme reuses the same neutrals inverted.
+- The logomark sits on the "Delivery from club" band at 28 px (minimum is 20). The wordmark heads the spec column at 30 px (the minimum), swapping to the inverse SVG in dark mode through a CSS token.
+
 ## Notes
 
 - The name and address on the delivery card are placeholders, not the ones in the source screenshot.
-- The knob chevron is a stroked 2.6 px path to match the production weight rather than the thinner Living Design `ChevronRight` glyph.
+- The knob chevron is a stroked 2.6 px path to match the production weight.
