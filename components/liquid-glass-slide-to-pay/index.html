@@ -45,7 +45,8 @@
   --knob-fg:#0a6cff;
   --cap-tint-a:rgba(10,108,255,.82);
   --cap-tint-b:rgba(11,94,254,.74);
-  --cap-label:#ffffff;
+  --cap-label:rgba(255,255,255,.62);
+  --cap-shine:#ffffff;
   --bezel:#0e1016;
   --font:"Sams Sans UI","Helvetica Neue",Arial,sans-serif;
   --mono:"Sams Sans Mono UI",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
@@ -196,7 +197,7 @@ svg{display:block}
 
 /* ---------- the control ---------- */
 .lg-slide{
-  --cap-a:var(--cap-tint-a);--cap-b:var(--cap-tint-b);--label:var(--cap-label);
+  --cap-a:var(--cap-tint-a);--cap-b:var(--cap-tint-b);--label:var(--cap-label);--shine:var(--cap-shine);
   --kbg:var(--knob-bg);--kfg:var(--knob-fg);
   position:relative;height:64px;border-radius:32px;overflow:hidden;isolation:isolate;
   touch-action:none;user-select:none;-webkit-user-select:none;
@@ -212,7 +213,7 @@ svg{display:block}
 }
 .lg-slide.lens-on{--kbg:var(--knob-bg-lens)}
 .lg-slide.is-clear{
-  --cap-a:rgba(255,255,255,.42);--cap-b:rgba(255,255,255,.22);--label:var(--sc-text);
+  --cap-a:rgba(255,255,255,.42);--cap-b:rgba(255,255,255,.22);--label:var(--sc-blue);--shine:#a6e0ff;
   --kbg:rgba(10,108,255,.88);--kfg:#ffffff;
   box-shadow:
     inset 0 1px 0 rgba(255,255,255,.9),
@@ -238,16 +239,17 @@ svg{display:block}
   position:absolute;top:0;bottom:0;left:0;width:0;border-radius:32px;pointer-events:none;z-index:1;
   background:linear-gradient(90deg,rgba(255,255,255,.26),rgba(255,255,255,.10) 70%,rgba(255,255,255,0));
 }
-.lg-sheen{
-  position:absolute;top:-20%;bottom:-20%;left:0;width:34%;pointer-events:none;z-index:2;
-  background:linear-gradient(100deg,rgba(255,255,255,0) 0%,rgba(255,255,255,.20) 42%,rgba(190,228,255,.42) 50%,rgba(255,255,255,.20) 58%,rgba(255,255,255,0) 100%);
-  mix-blend-mode:screen;filter:blur(2px);
-  transform:translateX(-120%);
-  animation:lg-sweep 2.6s cubic-bezier(.45,0,.2,1) .9s infinite;
+/* label shimmer, as on the iOS 27 slide controls: a soft band crosses the text every 1.6 s */
+.lg-label-text{position:relative;display:inline-block;white-space:nowrap}
+.lg-label-text::after{
+  content:attr(data-text);position:absolute;inset:0;color:transparent;pointer-events:none;
+  background:linear-gradient(90deg,rgba(255,255,255,0) 0%,var(--shine) 50%,rgba(255,255,255,0) 100%) no-repeat;
+  background-size:35% 100%;background-position-x:-60%;
+  -webkit-background-clip:text;background-clip:text;
+  animation:lg-text-shimmer 1.6s linear infinite;
 }
-.lg-slide.is-clear .lg-sheen{opacity:.6}
-.lg-slide:not([data-state="idle"]) .lg-sheen{animation-play-state:paused;opacity:0;transition:opacity .2s}
-@keyframes lg-sweep{0%{transform:translateX(-120%)}52%,100%{transform:translateX(330%)}}
+.lg-slide:not([data-state="idle"]) .lg-label-text::after{animation-play-state:paused;opacity:0;transition:opacity .2s}
+@keyframes lg-text-shimmer{from{background-position-x:-60%}to{background-position-x:160%}}
 
 .lg-label,.lg-done{
   position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:10px;
@@ -344,7 +346,8 @@ svg{display:block}
 .sw.tint::after{background:linear-gradient(180deg,rgba(10,108,255,.82),rgba(11,94,254,.74));-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
 .sw.rim::after{background:rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(0,0,0,.25),inset 0 0 0 1px rgba(255,255,255,.3)}
 .sw.lens::after{border-radius:50%;inset:4px;background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(1px) saturate(1.6);backdrop-filter:blur(1px) saturate(1.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),inset 0 -3px 5px rgba(0,0,0,.18)}
-.sw.sheen::after{background:linear-gradient(100deg,transparent 30%,rgba(255,255,255,.75) 50%,transparent 70%),rgba(10,108,255,.85)}
+.sw.sheen::after{background:rgba(10,108,255,.9)}
+.sw.sheen::before{content:"Aa";position:absolute;inset:0;display:grid;place-items:center;z-index:1;font-weight:600;font-size:15px;color:transparent;background:linear-gradient(90deg,rgba(255,255,255,.55) 30%,#fff 50%,rgba(255,255,255,.55) 70%);-webkit-background-clip:text;background-clip:text}
 .sw.brand::after{background:linear-gradient(135deg,#0a6cff 50%,#00ac44 50%)}
 .layers b{display:block;font-size:15px}
 .layers p{margin:3px 0 0;font-size:14px;line-height:1.45;color:var(--fg-muted)}
@@ -357,7 +360,7 @@ svg{display:block}
 .foot b{color:var(--fg)}
 
 @media (prefers-reduced-motion:reduce){
-  .lg-sheen{animation:none;opacity:0}
+  .lg-label-text::after{animation:none;display:none}
   .lg-slide,.lg-knob,.lg-done,.lg-label,.lg-fill,.sc-reset{transition:none!important}
 }
 </style>
@@ -455,8 +458,7 @@ svg{display:block}
 
         <div class="lg-slide" id="slide" data-state="idle">
           <div class="lg-fill" id="fill"></div>
-          <div class="lg-sheen"></div>
-          <span class="lg-label" id="label">Slide to pay</span>
+          <span class="lg-label" id="label"><span class="lg-label-text" data-text="Slide to pay">Slide to pay</span></span>
           <span class="lg-done" id="done" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
             Order placed
@@ -479,7 +481,7 @@ svg{display:block}
       <div class="wordmark" role="img" aria-label="Sam’s Club"></div>
       <p class="eyebrow">Checkout · prototype</p>
       <h2>Slide to pay, rebuilt in Liquid Glass</h2>
-      <p class="lead">The production control is a flat blue capsule with a white knob and a sheen that sweeps the track every 2.6 seconds. This version keeps that cadence and rebuilds the control as layered glass: a floating tray over the checkout, a Club Blue tinted capsule, and a clear lens knob that bends the label as it passes over it. Type is Sam’s Sans UI and colour comes from the brand playbook.</p>
+      <p class="lead">The production control is a flat blue capsule with a white knob and a sheen that sweeps the track every 2.6 seconds. This version rebuilds it as layered glass: a floating tray over the checkout, a Club Blue tinted capsule, and a clear lens knob that bends the label as it passes over it. The shimmer moves off the capsule and onto the label, at the cadence of the iOS 27 slide controls. Type is Sam’s Sans UI and colour comes from the brand playbook. The same control is written as SwiftUI components in the repo.</p>
     </div>
 
     <div class="controls">
@@ -497,7 +499,7 @@ svg{display:block}
         <li><span class="sw tint" aria-hidden="true"></span><div><b>Tinted capsule</b><p>Club Blue <code>#0A6CFF</code> carried as a tint over the blurred backdrop rather than a flat fill, so scrolling content shifts the colour slightly. <code>blur 14 · saturate 180% · blue 82→74%</code>.</p></div></li>
         <li><span class="sw rim" aria-hidden="true"></span><div><b>Rim light</b><p>Light arrives from the top left: a 1 px white inner highlight on the top edge, a deeper blue inner shadow on the bottom edge, and a radial specular at 18% / 0%.</p></div></li>
         <li><span class="sw lens" aria-hidden="true"></span><div><b>Lens knob</b><p>Clear glass instead of solid white. In Chrome and Edge the knob refracts its backdrop through an SVG displacement map, so the label bends inside it as it slides. Elsewhere a gradient ring stands in for the refraction. <span id="lensNote"></span></p></div></li>
-        <li><span class="sw sheen" aria-hidden="true"></span><div><b>Sheen</b><p>The production sweep, kept at its 2.6 s cadence, rendered as a soft caustic in screen blend. It pauses while you hold the knob.</p></div></li>
+        <li><span class="sw sheen" aria-hidden="true"></span><div><b>Label shimmer</b><p>Borrowed from the iOS 27 slide controls: a soft band about a third of the label’s width crosses it once every <code>1.6 s</code>, brightening the text from 62% white to white (Club Blue to Light Blue on the clear variant). The capsule itself stays still. It pauses while you hold the knob.</p></div></li>
         <li><span class="sw brand" aria-hidden="true"></span><div><b>Brand assets</b><p>Sam’s Sans UI throughout: Semibold for the label and total, Medium for chips, Regular for body, Mono UI for the values on this page. Completion turns Maverick Green <code>#00AC44</code>. The logomark and wordmark are the supplied SVGs, not retyped.</p></div></li>
       </ul>
     </div>
@@ -505,7 +507,7 @@ svg{display:block}
     <div>
       <h3>States</h3>
       <ul class="states">
-        <li><b>Idle</b><span>Sheen sweeps. Knob rests at the left edge.</span></li>
+        <li><b>Idle</b><span>Label shimmers. Knob rests at the left edge.</span></li>
         <li><b>Pressed</b><span>Capsule scales to 1.015 and the knob brightens.</span></li>
         <li><b>Dragging</b><span>Knob trails the finger slightly and stretches with velocity. The label fades as it is covered. A lighter liquid fill follows behind.</span></li>
         <li><b>Released early</b><span>Below 88%, the knob springs back with a small overshoot.</span></li>
