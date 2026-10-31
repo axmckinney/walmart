@@ -4,7 +4,7 @@ import SwiftUI
 public enum LiquidGlassMaterial: Sendable {
     /// Regular glass carrying a colour. Content behind it reads as colour, not detail.
     case tinted(Color)
-    /// Regular glass with no tint. The tray and the clear variant's track.
+    /// Regular glass with no tint. The tray and small controls on it.
     case regular
     /// Clear glass: the lens. Refracts what sits behind it. The knob.
     case clear

@@ -43,8 +43,6 @@
   --knob-bg:rgba(255,255,255,.88);
   --knob-bg-lens:rgba(255,255,255,.58);
   --knob-fg:#0a6cff;
-  --cap-tint-a:rgba(10,108,255,.82);
-  --cap-tint-b:rgba(11,94,254,.74);
   --cap-label:rgba(255,255,255,.62);
   --cap-shine:#ffffff;
   --bezel:#0e1016;
@@ -197,42 +195,14 @@ svg{display:block}
 
 /* ---------- the control ---------- */
 .lg-slide{
-  --cap-a:var(--cap-tint-a);--cap-b:var(--cap-tint-b);--label:var(--cap-label);--shine:var(--cap-shine);
+  --cap:var(--sc-blue);--label:var(--cap-label);--shine:var(--cap-shine);
   --kbg:var(--knob-bg);--kfg:var(--knob-fg);
   position:relative;height:64px;border-radius:32px;overflow:hidden;isolation:isolate;
   touch-action:none;user-select:none;-webkit-user-select:none;
-  background:linear-gradient(180deg,var(--cap-a),var(--cap-b));
-  -webkit-backdrop-filter:blur(14px) saturate(180%);
-  backdrop-filter:blur(14px) saturate(180%);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.58),
-    inset 0 -1px 0 rgba(0,35,110,.28),
-    inset 0 0 0 1px rgba(255,255,255,.16),
-    0 12px 28px rgba(10,108,255,.36);
-  transition:transform .22s var(--ease-out),background .45s,box-shadow .45s;
+  background:var(--cap); /* solid, as in production: the glass lives on the knob and the label */
+  transition:transform .22s var(--ease-out),background .45s;
 }
 .lg-slide.lens-on{--kbg:var(--knob-bg-lens)}
-.lg-slide.is-clear{
-  --cap-a:rgba(255,255,255,.42);--cap-b:rgba(255,255,255,.22);--label:var(--sc-blue);--shine:#a6e0ff;
-  --kbg:rgba(10,108,255,.88);--kfg:#ffffff;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.9),
-    inset 0 -1px 0 rgba(20,40,90,.12),
-    inset 0 0 0 1px rgba(255,255,255,.35),
-    0 10px 24px rgba(16,40,90,.14);
-}
-.lg-slide.is-clear.lens-on{--kbg:rgba(10,108,255,.72)}
-.lg-slide::before{ /* specular highlight: light from the top left, depth at the bottom edge */
-  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;
-  background:
-    radial-gradient(120% 90% at 18% 0%,rgba(255,255,255,.36),rgba(255,255,255,0) 55%),
-    linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,0) 42%,rgba(0,0,0,0) 72%,rgba(0,25,80,.16));
-}
-.lg-slide.is-clear::before{
-  background:
-    radial-gradient(120% 90% at 18% 0%,rgba(255,255,255,.7),rgba(255,255,255,0) 55%),
-    linear-gradient(180deg,rgba(255,255,255,.3),rgba(255,255,255,0) 42%,rgba(0,0,0,0) 72%,rgba(20,40,90,.06));
-}
 .lg-slide[data-state="pressed"],.lg-slide[data-state="dragging"]{transform:scale(1.015)}
 
 .lg-fill{ /* displaced liquid trailing the knob */
@@ -284,11 +254,6 @@ svg{display:block}
     radial-gradient(circle at 50% 50%,rgba(255,255,255,0) 56%,rgba(10,108,255,.08) 76%,rgba(10,108,255,.24) 91%,rgba(255,255,255,.55) 100%),
     radial-gradient(circle at 30% 24%,rgba(255,255,255,.85),rgba(255,255,255,0) 46%);
 }
-.lg-slide.is-clear .lg-knob::before{
-  background:
-    radial-gradient(circle at 50% 50%,rgba(255,255,255,0) 56%,rgba(255,255,255,.08) 76%,rgba(255,255,255,.22) 91%,rgba(255,255,255,.6) 100%),
-    radial-gradient(circle at 30% 24%,rgba(255,255,255,.55),rgba(255,255,255,0) 46%);
-}
 .lg-knob svg{width:26px;height:26px;position:relative;grid-area:1/1;transition:opacity .2s,transform .3s var(--ease-out)}
 .lg-knob .ic-check{opacity:0;transform:scale(.6)}
 .lg-slide[data-state="dragging"] .lg-knob{cursor:grabbing;box-shadow:
@@ -303,14 +268,7 @@ svg{display:block}
     0 0 0 3px #fff,0 0 0 6px var(--sc-blue)}
 
 /* completion: the knob swells leftward into the capsule and dissolves, tint turns positive */
-.lg-slide.is-done{
-  --cap-a:rgba(0,172,68,.90);--cap-b:rgba(1,111,44,.90);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.55),
-    inset 0 -1px 0 rgba(0,50,10,.3),
-    inset 0 0 0 1px rgba(255,255,255,.16),
-    0 12px 28px rgba(0,172,68,.34);
-}
+.lg-slide.is-done{--cap:var(--sc-positive)}
 .lg-slide.is-done .lg-knob{
   left:4px!important;width:calc(100% - 8px);opacity:0;transform:none!important;cursor:default;
   transition:left .48s var(--ease-in-out),width .48s var(--ease-in-out),opacity .32s .22s;
@@ -343,7 +301,7 @@ svg{display:block}
   linear-gradient(135deg,#ff9f43,#ee5a6f 45%,#5f27cd);}
 .sw::after{content:"";position:absolute;inset:0}
 .sw.tray::after{background:rgba(255,255,255,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:inset 0 1px 0 #fff}
-.sw.tint::after{background:linear-gradient(180deg,rgba(10,108,255,.82),rgba(11,94,254,.74));-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px)}
+.sw.tint::after{background:#0a6cff}
 .sw.rim::after{background:rgba(255,255,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(0,0,0,.25),inset 0 0 0 1px rgba(255,255,255,.3)}
 .sw.lens::after{border-radius:50%;inset:4px;background:rgba(255,255,255,.5);-webkit-backdrop-filter:blur(1px) saturate(1.6);backdrop-filter:blur(1px) saturate(1.6);box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),inset 0 -3px 5px rgba(0,0,0,.18)}
 .sw.sheen::after{background:rgba(10,108,255,.9)}
@@ -481,14 +439,10 @@ svg{display:block}
       <div class="wordmark" role="img" aria-label="Sam’s Club"></div>
       <p class="eyebrow">Checkout · prototype</p>
       <h2>Slide to pay, rebuilt in Liquid Glass</h2>
-      <p class="lead">The production control is a flat blue capsule with a white knob and a sheen that sweeps the track every 2.6 seconds. This version rebuilds it as layered glass: a floating tray over the checkout, a Club Blue tinted capsule, and a clear lens knob that bends the label as it passes over it. The shimmer moves off the capsule and onto the label, at the cadence of the iOS 27 slide controls. Type is Sam’s Sans UI and colour comes from the brand playbook. The same control is written as SwiftUI components in the repo.</p>
+      <p class="lead">The production control is a flat blue capsule with a white knob and a sheen that sweeps the track every 2.6 seconds. This version rebuilds it as layered glass: a floating tray over the checkout, a solid Club Blue capsule kept flat as in production, and glass reserved for two parts: a clear lens knob that bends the label as it passes over it, and the label itself. The shimmer moves off the capsule and onto the label, at the cadence of the iOS 27 slide controls. Type is Sam’s Sans UI and colour comes from the brand playbook. The same control is written as SwiftUI components in the repo.</p>
     </div>
 
     <div class="controls">
-      <div class="seg" role="group" aria-label="Capsule material">
-        <button type="button" id="tintTinted" aria-pressed="true">Tinted</button>
-        <button type="button" id="tintClear" aria-pressed="false">Clear</button>
-      </div>
       <button type="button" class="btn" id="resetBtn">Reset</button>
     </div>
 
@@ -496,10 +450,10 @@ svg{display:block}
       <h3>Material stack</h3>
       <ul class="layers">
         <li><span class="sw tray" aria-hidden="true"></span><div><b>Floating tray</b><p>Total, control and legal line sit on one glass sheet inset 12 px from the screen edge. <code>blur 20 · saturate 170% · white 60%</code>, 34 px radius, soft 22 px shadow.</p></div></li>
-        <li><span class="sw tint" aria-hidden="true"></span><div><b>Tinted capsule</b><p>Club Blue <code>#0A6CFF</code> carried as a tint over the blurred backdrop rather than a flat fill, so scrolling content shifts the colour slightly. <code>blur 14 · saturate 180% · blue 82→74%</code>.</p></div></li>
-        <li><span class="sw rim" aria-hidden="true"></span><div><b>Rim light</b><p>Light arrives from the top left: a 1 px white inner highlight on the top edge, a deeper blue inner shadow on the bottom edge, and a radial specular at 18% / 0%.</p></div></li>
+        <li><span class="sw tint" aria-hidden="true"></span><div><b>Solid capsule</b><p>Club Blue <code>#0A6CFF</code>, flat, with no gradient and no material, exactly as production paints it. Keeping the track solid lets the two glass parts read as glass.</p></div></li>
+        <li><span class="sw rim" aria-hidden="true"></span><div><b>Rim light</b><p>On the knob only. Light arrives from the top left: a 1 px white inner highlight on its upper edge, a deeper blue inner shadow on its lower edge, and a specular at 30% / 24%.</p></div></li>
         <li><span class="sw lens" aria-hidden="true"></span><div><b>Lens knob</b><p>Clear glass instead of solid white. In Chrome and Edge the knob refracts its backdrop through an SVG displacement map, so the label bends inside it as it slides. Elsewhere a gradient ring stands in for the refraction. <span id="lensNote"></span></p></div></li>
-        <li><span class="sw sheen" aria-hidden="true"></span><div><b>Label shimmer</b><p>Borrowed from the iOS 27 slide controls: a soft band about a third of the label’s width crosses it once every <code>1.6 s</code>, brightening the text from 62% white to white (Club Blue to Light Blue on the clear variant). The capsule itself stays still. It pauses while you hold the knob.</p></div></li>
+        <li><span class="sw sheen" aria-hidden="true"></span><div><b>Label shimmer</b><p>Borrowed from the iOS 27 slide controls: a soft band about a third of the label’s width crosses it once every <code>1.6 s</code>, brightening the text from 62% white to white. The capsule itself stays still. It pauses while you hold the knob.</p></div></li>
         <li><span class="sw brand" aria-hidden="true"></span><div><b>Brand assets</b><p>Sam’s Sans UI throughout: Semibold for the label and total, Medium for chips, Regular for body, Mono UI for the values on this page. Completion turns Maverick Green <code>#00AC44</code>. The logomark and wordmark are the supplied SVGs, not retyped.</p></div></li>
       </ul>
     </div>
@@ -681,15 +635,6 @@ svg{display:block}
   document.getElementById('resetBtn').addEventListener('click', reset);
   document.getElementById('resetInline').addEventListener('click', reset);
 
-  // tint toggle
-  const tTinted = document.getElementById('tintTinted'), tClear = document.getElementById('tintClear');
-  function setTint(clear){
-    slide.classList.toggle('is-clear', clear);
-    tTinted.setAttribute('aria-pressed', String(!clear));
-    tClear.setAttribute('aria-pressed', String(clear));
-  }
-  tTinted.addEventListener('click', () => setTint(false));
-  tClear.addEventListener('click', () => setTint(true));
 
   // ---- refraction: SVG displacement map, Chromium only ----
   const ua = navigator.userAgent;

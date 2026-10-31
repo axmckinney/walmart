@@ -1,16 +1,9 @@
 import SwiftUI
 
-/// Material variants of the control.
-public enum SlideToPayVariant: Sendable {
-    /// Club Blue tinted capsule, white label, clear glass knob with a blue chevron.
-    case tinted
-    /// Clear glass capsule, Club Blue label, blue tinted knob with a white chevron.
-    case clear
-}
-
 /// The Sam's Club "Slide to pay" control, rebuilt in Liquid Glass.
 ///
-/// - The track is tinted glass. The knob is clear glass, so it lenses the label as it passes.
+/// - The track is solid Club Blue, flat as in production. Glass is reserved for the knob and
+///   the label: the knob is clear glass, so it lenses the label as it passes.
 /// - While resting, the label shimmers the way the iOS 27 slide controls do. The capsule itself
 ///   does not shimmer.
 /// - Dragging stretches the knob with velocity and leaves a lighter liquid fill behind it.
@@ -23,7 +16,7 @@ public struct SlideToPayControl: View {
     public var completedTitle: String
     /// Spoken after the title, for example "$148.45".
     public var amountDescription: String
-    public var variant: SlideToPayVariant
+    /// Solid track colour. Club Blue by default.
     public var tint: Color
     public var completedTint: Color
     public var height: CGFloat
@@ -36,7 +29,6 @@ public struct SlideToPayControl: View {
         title: String = "Slide to pay",
         completedTitle: String = "Order placed",
         amountDescription: String = "",
-        variant: SlideToPayVariant = .tinted,
         tint: Color = SamsClubColor.clubBlue,
         completedTint: Color = SamsClubColor.maverickGreen,
         height: CGFloat = 64,
@@ -47,7 +39,6 @@ public struct SlideToPayControl: View {
         self.title = title
         self.completedTitle = completedTitle
         self.amountDescription = amountDescription
-        self.variant = variant
         self.tint = tint
         self.completedTint = completedTint
         self.height = height
@@ -127,15 +118,15 @@ public struct SlideToPayControl: View {
         ZStack(alignment: .leading) {
             // Displaced liquid trailing the knob.
             Capsule()
-                .fill(.white.opacity(variant == .tinted ? 0.16 : 0.45))
+                .fill(.white.opacity(0.16))
                 .frame(width: knobInset + dragX + knobSize / 2)
                 .opacity(progress > 0.01 && !showCompleted ? 1 : 0)
 
-            // Resting label: shimmers while idle, fades as the knob covers it.
+            // Resting label: translucent white that the shimmer brightens, fading as the knob covers it.
             Text(title)
                 .font(SamsSans.ui(19, weight: .semibold, relativeTo: .title3))
-                .foregroundStyle(labelBase)
-                .shimmer(ShimmerStyle(highlight: labelHighlight), isActive: !isDragging && !isComplete)
+                .foregroundStyle(.white.opacity(0.62))
+                .shimmer(ShimmerStyle(highlight: .white), isActive: !isDragging && !isComplete)
                 .opacity(max(0, 1 - progress * 1.9))
                 .offset(x: progress * 18)
                 .frame(maxWidth: .infinity)
@@ -154,30 +145,9 @@ public struct SlideToPayControl: View {
         }
         .frame(maxWidth: .infinity)
         .frame(height: height)
-        .liquidGlass(trackMaterial, in: Capsule(), interactive: true)
+        // Solid, flat track. No gradient, no glass: the knob and label carry the glass.
+        .background(Capsule().fill(showCompleted ? completedTint : tint))
         .animation(.easeInOut(duration: 0.4), value: showCompleted)
-    }
-
-    private var trackMaterial: LiquidGlassMaterial {
-        if showCompleted { return .tinted(completedTint) }
-        switch variant {
-        case .tinted: return .tinted(tint)
-        case .clear: return .regular
-        }
-    }
-
-    private var labelBase: Color {
-        switch variant {
-        case .tinted: .white.opacity(0.62)
-        case .clear: tint
-        }
-    }
-
-    private var labelHighlight: Color {
-        switch variant {
-        case .tinted: .white
-        case .clear: SamsClubColor.lightBlue
-        }
     }
 
     // MARK: - Knob
@@ -186,29 +156,15 @@ public struct SlideToPayControl: View {
         let width = knobFills ? trackWidth - knobInset * 2 : knobSize
         return Image(systemName: "chevron.right")
             .font(.system(size: 22, weight: .bold))
-            .foregroundStyle(knobForeground)
+            .foregroundStyle(tint)
             .opacity(knobFills ? 0 : 1)
             .frame(width: width, height: knobSize)
-            .liquidGlass(knobMaterial, in: Capsule(), interactive: true)
+            .liquidGlass(.clear, in: Capsule(), interactive: true)
             .scaleEffect(x: 1 + stretch, y: 1 - stretch * 0.55)
             .offset(x: knobInset + dragX)
             .opacity(showCompleted ? 0 : 1)
             .gesture(dragGesture(maxX: maxX))
             .allowsHitTesting(!isComplete)
-    }
-
-    private var knobMaterial: LiquidGlassMaterial {
-        switch variant {
-        case .tinted: .clear
-        case .clear: .tinted(tint)
-        }
-    }
-
-    private var knobForeground: Color {
-        switch variant {
-        case .tinted: tint
-        case .clear: .white
-        }
     }
 
     // MARK: - Gesture
@@ -305,7 +261,7 @@ public struct SlideToPayControl: View {
 
 // MARK: - Previews
 
-#Preview("Tinted") {
+#Preview("Control") {
     struct Host: View {
         @State private var done = false
         var body: some View {
@@ -315,17 +271,6 @@ public struct SlideToPayControl: View {
                     .disabled(!done)
             }
             .padding(24)
-        }
-    }
-    return Host()
-}
-
-#Preview("Clear") {
-    struct Host: View {
-        @State private var done = false
-        var body: some View {
-            SlideToPayControl(amountDescription: "$148.45", variant: .clear, isComplete: $done)
-                .padding(24)
         }
     }
     return Host()

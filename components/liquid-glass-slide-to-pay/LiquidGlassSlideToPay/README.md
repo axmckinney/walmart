@@ -1,6 +1,6 @@
 # LiquidGlassSlideToPay
 
-SwiftUI components for the Sam's Club "Slide to pay" control in Liquid Glass. iOS 17 and later; on iOS 26 and later the surfaces are real Liquid Glass through `glassEffect`, on iOS 17 and 18 they fall back to a system material with a rim light so layout and behavior stay identical.
+SwiftUI components for the Sam's Club "Slide to pay" control in Liquid Glass. The track stays solid Club Blue, as in production; the glass lives on the handle and the label. iOS 17 and later; on iOS 26 and later the glass surfaces use `glassEffect`, on iOS 17 and 18 they fall back to a system material with a rim light so layout and behavior stay identical.
 
 The package was written without access to Xcode in this session, so it has not been compiled. Open it in Xcode 26 and run the previews first; anything the compiler flags should be small.
 
@@ -37,7 +37,7 @@ struct Checkout: View {
 Or the control on its own:
 
 ```swift
-SlideToPayControl(amountDescription: "$148.45", variant: .tinted, isComplete: $paid) {
+SlideToPayControl(amountDescription: "$148.45", isComplete: $paid) {
     // place the order
 }
 ```
@@ -50,7 +50,7 @@ Set `isComplete` back to `false` to reset the control; it animates back to idle.
 
 | File | Contents |
 | --- | --- |
-| `SlideToPayControl.swift` | The control: tinted glass track, clear glass knob, drag with velocity stretch, spring back, completion morph, haptics, VoiceOver. |
+| `SlideToPayControl.swift` | The control: solid Club Blue track, clear glass knob, shimmering label, drag with velocity stretch, spring back, completion morph, haptics, VoiceOver. |
 | `Shimmer.swift` | `.shimmer()` modifier and `ShimmerText`: the iOS 27 slide-control label treatment. |
 | `LiquidGlassSurface.swift` | `.liquidGlass(_:in:interactive:)`: `glassEffect` on iOS 26, material fallback before. |
 | `CheckoutPayTray.swift` | The tray (total, control, legal line) and `SlideToPayDemo`. |
@@ -59,9 +59,9 @@ Set `isComplete` back to `false` to reset the control; it animates back to idle.
 
 ## Behavior
 
-**Shimmer.** The label, not the capsule, carries the shimmer, matching the iOS 27 slide controls. A soft band about a third of the label's width crosses it once every 1.6 s, starting and ending off the text. On the tinted variant the label rests at 62% white and brightens to white; on the clear variant it rests at Club Blue and brightens to Light Blue. The shimmer pauses while the knob is held and stops once the payment completes. Reduce Motion renders the label plainly.
+**Shimmer.** The label, not the capsule, carries the shimmer, matching the iOS 27 slide controls. A soft band about a third of the label's width crosses it once every 1.6 s, starting and ending off the text. The label rests at 62% white and brightens to white. The shimmer pauses while the knob is held and stops once the payment completes. Reduce Motion renders the label plainly.
 
-**Materials.** The track is `.regular` glass tinted Club Blue (`.regular` untinted on the clear variant). The knob is `.clear` glass, so on device it refracts the label as it passes. The tray is `.regular` glass with a 34 pt continuous corner. Everything is `.interactive()` so it responds to touch the way system glass does.
+**Materials.** The track is a solid Club Blue capsule: no gradient, no material. The knob is `.clear` glass, so on device it refracts the label as it passes, and the label is translucent white that the shimmer brightens. The tray is `.regular` glass with a 34 pt continuous corner. Glass surfaces are `.interactive()` so they respond to touch the way system glass does.
 
 **Drag.** The knob follows the finger. Its horizontal stretch comes from drag velocity (up to 26%), relaxing 90 ms after the finger stops. A lighter capsule fills the track behind the knob. Soft impact haptics tick at each quarter. Releasing below 88% springs back with a small overshoot.
 
@@ -72,5 +72,5 @@ Set `isComplete` back to `false` to reset the control; it animates back to idle.
 ## Brand
 
 - Type is Sam's Sans UI: Semibold for the label, total, and headings; Medium for chips; Regular for body. Semibold is the heaviest UI weight, so nothing here asks for Bold.
-- Club Blue `#0A6CFF` tints the track. Maverick Green `#00AC44` is the completed tint. Light Blue `#A6E0FF` is the shimmer highlight on a blue label.
+- Club Blue `#0A6CFF` fills the track. Maverick Green `#00AC44` fills it once the payment completes.
 - The logomark appears on the "Delivery from club" band at 29 pt (playbook minimum 20). The wordmark asset is included at the playbook's 30 pt minimum in mind and swaps to its inverse in dark appearance.

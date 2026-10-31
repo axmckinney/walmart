@@ -10,20 +10,17 @@ import UIKit
 public struct CheckoutPayTray: View {
     public var total: String
     public var itemCount: Int
-    public var variant: SlideToPayVariant
     @Binding public var isComplete: Bool
     public var onComplete: () -> Void
 
     public init(
         total: String,
         itemCount: Int,
-        variant: SlideToPayVariant = .tinted,
         isComplete: Binding<Bool>,
         onComplete: @escaping () -> Void = {}
     ) {
         self.total = total
         self.itemCount = itemCount
-        self.variant = variant
         self._isComplete = isComplete
         self.onComplete = onComplete
     }
@@ -42,7 +39,6 @@ public struct CheckoutPayTray: View {
 
             SlideToPayControl(
                 amountDescription: total,
-                variant: variant,
                 isComplete: $isComplete,
                 onComplete: onComplete
             )
@@ -62,7 +58,6 @@ public struct CheckoutPayTray: View {
 /// A checkout screen to exercise the tray: a Club Blue header, scrolling cards, and the tray on top.
 public struct SlideToPayDemo: View {
     @State private var isComplete = false
-    @State private var variant: SlideToPayVariant = .tinted
 
     public init() {}
 
@@ -83,7 +78,7 @@ public struct SlideToPayDemo: View {
             }
             .background(backgroundColor)
 
-            CheckoutPayTray(total: "$148.45", itemCount: 4, variant: variant, isComplete: $isComplete)
+            CheckoutPayTray(total: "$148.45", itemCount: 4, isComplete: $isComplete)
                 .padding(12)
         }
         .safeAreaInset(edge: .top, spacing: 0) { header }
