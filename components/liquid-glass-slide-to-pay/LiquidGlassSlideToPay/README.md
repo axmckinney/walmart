@@ -20,13 +20,21 @@ Fonts and the two brand marks ship inside the package. Sam's Sans UI registers i
 import LiquidGlassSlideToPay
 
 struct Checkout: View {
-    @State private var paid = false
+    @State private var phase: SlideToPayPhase = .idle
 
     var body: some View {
         ZStack(alignment: .bottom) {
             ScrollView { /* checkout content, with bottom padding to scroll under the tray */ }
-            CheckoutPayTray(total: "$148.45", itemCount: 4, isComplete: $paid) {
-                // place the order
+            CheckoutPayTray(total: "$148.45", itemCount: 4, phase: $phase) {
+                // The slide completed and the control is showing "Placing your order".
+                Task {
+                    do {
+                        try await payments.placeOrder()
+                        phase = .complete      // green "Order placed"
+                    } catch {
+                        phase = .idle          // knob springs back; show your error
+                    }
+                }
             }
             .padding(12)
         }
@@ -37,12 +45,12 @@ struct Checkout: View {
 Or the control on its own:
 
 ```swift
-SlideToPayControl(amountDescription: "$148.45", isComplete: $paid) {
-    // place the order
+SlideToPayControl(amountDescription: "$148.45", phase: $phase) {
+    // start the payment, then set phase
 }
 ```
 
-Set `isComplete` back to `false` to reset the control; it animates back to idle.
+`phase` is the whole contract. The control moves itself to `.processing` when the slide completes and calls `onSlide`; you move it to `.complete` or back to `.idle`. Setting `.idle` at any time resets the control with an animation.
 
 `SlideToPayDemo` is a full checkout screen with cards, header, and a Reset button, for previews and design review.
 
@@ -50,7 +58,7 @@ Set `isComplete` back to `false` to reset the control; it animates back to idle.
 
 | File | Contents |
 | --- | --- |
-| `SlideToPayControl.swift` | The control: solid Club Blue track, clear glass knob, shimmering label, drag with velocity stretch, spring back, completion morph, haptics, VoiceOver. |
+| `SlideToPayControl.swift` | `SlideToPayPhase` and the control: solid Club Blue track, clear glass knob, shimmering label, drag with velocity stretch, spring back, processing ring, completion morph, haptics, VoiceOver. |
 | `Shimmer.swift` | `.shimmer()` modifier and `ShimmerText`: the iOS 27 slide-control label treatment. |
 | `LiquidGlassSurface.swift` | `.liquidGlass(_:in:interactive:)`: `glassEffect` on iOS 26, material fallback before. |
 | `CheckoutPayTray.swift` | The tray (total, control, legal line) and `SlideToPayDemo`. |
@@ -65,9 +73,11 @@ Set `isComplete` back to `false` to reset the control; it animates back to idle.
 
 **Drag.** The knob follows the finger. Its horizontal stretch comes from drag velocity (up to 26%), relaxing 90 ms after the finger stops. A lighter capsule fills the track behind the knob. Soft impact haptics tick at each quarter. Releasing below 88% springs back with a small overshoot.
 
-**Completion.** Past 88%, the knob snaps to the end, then swells leftward to fill the capsule and dissolves while the tint turns Maverick Green and "Order placed" fades in with a checkmark. A success haptic fires and `onComplete` is called.
+**Processing.** Past 88%, the knob snaps to the end and parks there. Its chevron shrinks away and a 2.5 pt progress ring in Club Blue turns inside the glass, once every 0.9 s. The label changes to "Placing your order" and keeps shimmering, slightly faster (1.1 s) so it reads as activity. A start haptic fires and `onSlide` is called. The state holds for at least `minimumProcessingDuration` (0.6 s) even if the host confirms instantly, so it never flashes.
 
-**Accessibility.** The control is one adjustable element. Swipe up or down moves the knob in 10% steps, reaching the end completes, and a custom "Pay" action completes directly. The label reads "Slide to pay, $148.45" and the value reports progress or "Order placed". Dynamic Type scales every font through `relativeTo:`.
+**Completion.** When the host sets `.complete`, the knob swells leftward to fill the capsule and dissolves while the fill turns Maverick Green and "Order placed" fades in with a checkmark. A success haptic fires. Setting `.idle` instead, for a declined payment, springs the knob back to the start.
+
+**Accessibility.** The control is one adjustable element. Swipe up or down moves the knob in 10% steps, reaching the end starts the payment, and a custom "Pay" action starts it directly. The label reads "Slide to pay, $148.45" and the value reports progress, "Placing your order", or "Order placed"; each phase change is also announced. Dynamic Type scales every font through `relativeTo:`.
 
 ## Brand
 

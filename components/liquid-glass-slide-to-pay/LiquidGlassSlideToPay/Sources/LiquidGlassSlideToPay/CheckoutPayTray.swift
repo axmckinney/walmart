@@ -10,19 +10,20 @@ import UIKit
 public struct CheckoutPayTray: View {
     public var total: String
     public var itemCount: Int
-    @Binding public var isComplete: Bool
-    public var onComplete: () -> Void
+    @Binding public var phase: SlideToPayPhase
+    /// Called when the slide completes. Start the payment, then set `phase` to `.complete` or back to `.idle`.
+    public var onSlide: () -> Void
 
     public init(
         total: String,
         itemCount: Int,
-        isComplete: Binding<Bool>,
-        onComplete: @escaping () -> Void = {}
+        phase: Binding<SlideToPayPhase>,
+        onSlide: @escaping () -> Void = {}
     ) {
         self.total = total
         self.itemCount = itemCount
-        self._isComplete = isComplete
-        self.onComplete = onComplete
+        self._phase = phase
+        self.onSlide = onSlide
     }
 
     public var body: some View {
@@ -39,8 +40,8 @@ public struct CheckoutPayTray: View {
 
             SlideToPayControl(
                 amountDescription: total,
-                isComplete: $isComplete,
-                onComplete: onComplete
+                phase: $phase,
+                onSlide: onSlide
             )
 
             Text("By sliding to pay, you agree to our [Privacy Policy](https://www.samsclub.com/privacy) and [Terms of Use](https://www.samsclub.com/terms)")
@@ -56,8 +57,9 @@ public struct CheckoutPayTray: View {
 }
 
 /// A checkout screen to exercise the tray: a Club Blue header, scrolling cards, and the tray on top.
+/// The payment service is simulated: it confirms 1.6 s after the slide.
 public struct SlideToPayDemo: View {
-    @State private var isComplete = false
+    @State private var phase: SlideToPayPhase = .idle
 
     public init() {}
 
@@ -78,8 +80,13 @@ public struct SlideToPayDemo: View {
             }
             .background(backgroundColor)
 
-            CheckoutPayTray(total: "$148.45", itemCount: 4, isComplete: $isComplete)
-                .padding(12)
+            CheckoutPayTray(total: "$148.45", itemCount: 4, phase: $phase) {
+                Task {
+                    try? await Task.sleep(for: .seconds(1.6))
+                    phase = .complete
+                }
+            }
+            .padding(12)
         }
         .safeAreaInset(edge: .top, spacing: 0) { header }
     }
@@ -105,9 +112,9 @@ public struct SlideToPayDemo: View {
                     .foregroundStyle(.white)
                     .padding(.leading, 8)
                 Spacer()
-                if isComplete {
+                if phase == .complete {
                     Button("Reset") {
-                        isComplete = false
+                        phase = .idle
                     }
                     .font(SamsSans.ui(13, weight: .semibold, relativeTo: .footnote))
                     .foregroundStyle(.white)
@@ -122,7 +129,7 @@ public struct SlideToPayDemo: View {
         .frame(height: 56)
         .frame(maxWidth: .infinity)
         .background(SamsClubColor.clubBlue)
-        .animation(.easeOut(duration: 0.25), value: isComplete)
+        .animation(.easeOut(duration: 0.25), value: phase)
     }
 
     // MARK: Cards

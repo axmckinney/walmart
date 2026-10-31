@@ -15,12 +15,12 @@ The Sam's Club checkout "Slide to pay" control, rebuilt as layered glass in the 
 | Sheen sweeps the blue capsule every 2.6 s | The capsule stays still. The label shimmers instead, as on the iOS 27 slide controls: a soft band crosses the text every 1.6 s, brightening it from 62% white to white (Club Blue to Light Blue on the clear variant). Pauses while the knob is held |
 | No press feedback | Capsule scales to 1.015 and the knob brightens on press |
 | Knob follows finger 1:1 | Knob trails slightly and stretches with velocity, a lighter liquid fill follows behind; early release springs back |
-| Flat completion | Knob swells leftward into the capsule and dissolves, the fill turns Maverick Green `#00AC44`, label reads "Order placed" |
+| Spinner, then confirmation | Processing: knob parks at the end, its chevron becomes a progress ring, label reads "Placing your order" and keeps shimmering. Completion: knob swells leftward into the capsule and dissolves, the fill turns Maverick Green `#00AC44`, label reads "Order placed" |
 
 ## Interaction
 
-- Drag the knob past 88% and release to complete. Release earlier and it springs back.
-- Keyboard: focus the knob, arrow keys move it in 10% steps, Home and End jump, End completes.
+- Drag the knob past 88% and release to pay. Release earlier and it springs back. The prototype simulates a 1.6 s payment round trip before confirming.
+- Keyboard: focus the knob, arrow keys move it in 10% steps, Home and End jump, End pays.
 - "Reset" appears in the header after completion. The spec column also has a Reset button.
 - `prefers-reduced-motion` disables the shimmer, the stretch and the spring.
 

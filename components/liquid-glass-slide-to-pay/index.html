@@ -218,7 +218,10 @@ svg{display:block}
   -webkit-background-clip:text;background-clip:text;
   animation:lg-text-shimmer 1.6s linear infinite;
 }
-.lg-slide:not([data-state="idle"]) .lg-label-text::after{animation-play-state:paused;opacity:0;transition:opacity .2s}
+.lg-slide:not([data-state="idle"]) .lg-label:not(.lg-processing) .lg-label-text::after{animation-play-state:paused;opacity:0;transition:opacity .2s}
+.lg-processing{opacity:0;transition:opacity .25s}
+.lg-slide[data-state="processing"] .lg-processing{opacity:1}
+.lg-processing .lg-label-text::after{animation-duration:1.1s}
 @keyframes lg-text-shimmer{from{background-position-x:-60%}to{background-position-x:160%}}
 
 .lg-label,.lg-done{
@@ -256,6 +259,13 @@ svg{display:block}
 }
 .lg-knob svg{width:26px;height:26px;position:relative;grid-area:1/1;transition:opacity .2s,transform .3s var(--ease-out)}
 .lg-knob .ic-check{opacity:0;transform:scale(.6)}
+.lg-ring{grid-area:1/1;display:grid;place-items:center;opacity:0;transform:scale(.6);transition:opacity .2s,transform .3s var(--ease-out)}
+.lg-ring svg{width:22px;height:22px;animation:lg-spin .9s linear infinite;animation-play-state:paused}
+.lg-slide[data-state="processing"] .lg-ring{opacity:1;transform:none}
+.lg-slide[data-state="processing"] .lg-ring svg{animation-play-state:running}
+.lg-slide[data-state="processing"] .lg-knob .ic-chevron{opacity:0;transform:scale(.6)}
+.lg-slide[data-state="processing"] .lg-fill{opacity:0;transition:opacity .3s}
+@keyframes lg-spin{to{transform:rotate(360deg)}}
 .lg-slide[data-state="dragging"] .lg-knob{cursor:grabbing;box-shadow:
     inset 0 1px 1px rgba(255,255,255,1),
     inset 0 -2px 3px rgba(10,60,160,.16),
@@ -319,6 +329,7 @@ svg{display:block}
 
 @media (prefers-reduced-motion:reduce){
   .lg-label-text::after{animation:none;display:none}
+  .lg-ring svg{animation:none}
   .lg-slide,.lg-knob,.lg-done,.lg-label,.lg-fill,.sc-reset{transition:none!important}
 }
 </style>
@@ -417,6 +428,7 @@ svg{display:block}
         <div class="lg-slide" id="slide" data-state="idle">
           <div class="lg-fill" id="fill"></div>
           <span class="lg-label" id="label"><span class="lg-label-text" data-text="Slide to pay">Slide to pay</span></span>
+          <span class="lg-label lg-processing" id="processing" aria-hidden="true"><span class="lg-label-text" data-text="Placing your order">Placing your order</span></span>
           <span class="lg-done" id="done" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
             Order placed
@@ -425,6 +437,7 @@ svg{display:block}
                aria-label="Slide to pay $148.45" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Not started">
             <svg class="ic-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 5l7 7-7 7"/></svg>
             <svg class="ic-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+            <span class="lg-ring" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="9.5" stroke-dasharray="43 60"/></svg></span>
           </div>
         </div>
 
@@ -465,6 +478,7 @@ svg{display:block}
         <li><b>Pressed</b><span>Capsule scales to 1.015 and the knob brightens.</span></li>
         <li><b>Dragging</b><span>Knob trails the finger slightly and stretches with velocity. The label fades as it is covered. A lighter liquid fill follows behind.</span></li>
         <li><b>Released early</b><span>Below 88%, the knob springs back with a small overshoot.</span></li>
+        <li><b>Processing</b><span>Knob parks at the end and its chevron becomes a progress ring. The label reads “Placing your order” and keeps shimmering, a touch faster, until the payment service answers. Simulated here as 1.6 s.</span></li>
         <li><b>Complete</b><span>Knob swells leftward to fill the capsule and dissolves. Tint turns Maverick Green and the label reads “Order placed”.</span></li>
       </ul>
     </div>
@@ -498,11 +512,12 @@ svg{display:block}
   let stretch = 0, stretchTarget = 0;
   let dragging = false, grab = 0, moved = false;
   let lastX = 0, lastT = 0;
-  let complete = false, raf = 0, settling = false;
+  let phase = 'idle', raf = 0, settling = false, processingTimer = 0;
+  const PROCESSING_MS = 1600, PROCESSING_TEXT = 'Placing your order';
 
   function measure(){ maxX = Math.max(1, slide.clientWidth - KNOB - PAD * 2); }
   measure();
-  addEventListener('resize', () => { measure(); if (complete) return; target = Math.min(target, maxX); render(); });
+  addEventListener('resize', () => { measure(); if (phase !== 'idle') return; target = Math.min(target, maxX); render(); });
 
   function setState(s){ slide.dataset.state = s; }
 
@@ -522,14 +537,14 @@ svg{display:block}
     if (dragging) {
       x += (target - x) * (reduce ? 1 : 0.55);
       active = true;
-    } else if (!complete && settling) {
+    } else if (phase === 'idle' && settling) {
       // damped spring toward target (0 or maxX)
       const k = 0.16, damping = 0.74;
       vel = (vel + (target - x) * k) * damping;
       x += vel;
       if (Math.abs(vel) < 0.04 && Math.abs(target - x) < 0.3) {
         x = target; vel = 0; settling = false;
-        if (target >= maxX) { finish(); return; }
+        if (target >= maxX) { startProcessing(); return; }
         setState('idle');
       } else active = true;
     }
@@ -544,7 +559,7 @@ svg{display:block}
   function kick(){ if (!raf) raf = requestAnimationFrame(loop); }
 
   function onDown(e){
-    if (complete) return;
+    if (phase !== 'idle') return;
     dragging = true; moved = false; settling = false; vel = 0;
     const r = knob.getBoundingClientRect();
     grab = e.clientX - r.left;
@@ -574,7 +589,7 @@ svg{display:block}
     target = p >= THRESHOLD ? maxX : 0;
     settling = true;
     setState(p >= THRESHOLD ? 'completing' : 'settling');
-    if (reduce) { x = target; settling = false; if (target >= maxX) { finish(); return; } setState('idle'); render(); return; }
+    if (reduce) { x = target; settling = false; if (target >= maxX) { startProcessing(); return; } setState('idle'); render(); return; }
     kick();
   }
   knob.addEventListener('pointerdown', onDown);
@@ -584,7 +599,7 @@ svg{display:block}
   knob.addEventListener('lostpointercapture', () => { if (dragging) onUp({ pointerId: -1 }); });
 
   knob.addEventListener('keydown', (e) => {
-    if (complete) return;
+    if (phase !== 'idle') return;
     const step = maxX / 10;
     let next = null;
     if (e.key === 'ArrowRight' || e.key === 'ArrowUp') next = Math.min(maxX, target + step);
@@ -596,12 +611,26 @@ svg{display:block}
     e.preventDefault();
     target = next; settling = true; dragging = false;
     setState(next >= maxX ? 'completing' : 'dragging');
-    if (reduce) { x = target; settling = false; if (target >= maxX) { finish(); return; } setState('idle'); render(); return; }
+    if (reduce) { x = target; settling = false; if (target >= maxX) { startProcessing(); return; } setState('idle'); render(); return; }
     kick();
   });
 
+  function startProcessing(){
+    phase = 'processing';
+    x = maxX; fillX = maxX; stretch = 0; render();
+    setState('processing');
+    knob.setAttribute('aria-valuenow', '100');
+    knob.setAttribute('aria-valuetext', PROCESSING_TEXT);
+    knob.setAttribute('aria-busy', 'true');
+    live.textContent = PROCESSING_TEXT;
+    try { navigator.vibrate && navigator.vibrate(8); } catch (_) {}
+    // Stand-in for the payment service round trip.
+    processingTimer = setTimeout(finish, PROCESSING_MS);
+  }
+
   function finish(){
-    complete = true;
+    phase = 'complete';
+    knob.removeAttribute('aria-busy');
     x = maxX; fillX = maxX; stretch = 0; render();
     knob.style.left = (PAD + maxX) + 'px';
     knob.style.transform = 'none';
@@ -620,7 +649,9 @@ svg{display:block}
   }
 
   function reset(){
-    complete = false; dragging = false; settling = false;
+    clearTimeout(processingTimer);
+    phase = 'idle'; dragging = false; settling = false;
+    knob.removeAttribute('aria-busy');
     x = 0; target = 0; vel = 0; fillX = 0; stretch = 0; stretchTarget = 0;
     slide.classList.remove('is-done');
     screen.classList.remove('is-complete');
