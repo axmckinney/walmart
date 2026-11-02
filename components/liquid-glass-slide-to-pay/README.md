@@ -3,6 +3,17 @@
 The Sam's Club checkout "Slide to pay" control, rebuilt as layered glass in the style of iOS Liquid Glass. Two implementations share one design:
 
 - **`LiquidGlassSlideToPay/`**, a Swift package of SwiftUI components. This is the production direction: real `glassEffect` on iOS 26 and later with a material fallback for iOS 17 and 18, haptics, VoiceOver, Dynamic Type, Reduce Motion. See its README.
+- **`SlideToPayDemo.swiftpm/`**, an app playground that wraps the package in a runnable iOS app. Open it in Xcode 26 and press Run, or from a terminal in this folder:
+
+  ```sh
+  xcodebuild -scheme SlideToPayDemo -destination 'platform=iOS Simulator,name=iPhone 17 Pro' \
+    -derivedDataPath build build
+  xcrun simctl boot 'iPhone 17 Pro' 2>/dev/null; open -a Simulator
+  xcrun simctl install booted build/Build/Products/Debug-iphonesimulator/SlideToPayDemo.app
+  xcrun simctl launch booted com.samsclub.prototypes.SlideToPayDemo
+  ```
+
+  Run the first command from inside `SlideToPayDemo.swiftpm`. Liquid Glass needs an iOS 26 simulator; on iOS 17 and 18 runtimes the material fallback renders instead.
 - **`index.html`**, a browser prototype for review without Xcode. Open it directly; fonts, marks, and thumbnails are inlined. The source assets live in `../../assets/sams-club/`.
 
 ## What changed from production
